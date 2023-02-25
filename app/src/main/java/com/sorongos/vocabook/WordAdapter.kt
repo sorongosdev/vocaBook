@@ -8,7 +8,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.sorongos.vocabook.databinding.ItemWordBinding
 
 /**사용할 데이터는 데이터 클래스를 담고 있는 컬렉션 타입*/
-class WordAdapter(private val list: MutableList<Word>) : RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
+class WordAdapter(
+    private val list: MutableList<Word>,
+    private val itemClickListener: ItemClickListener? = null,
+) : RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): WordViewHolder {
         val inflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
@@ -28,6 +31,10 @@ class WordAdapter(private val list: MutableList<Word>) : RecyclerView.Adapter<Wo
 //            meanTextView.text = word.mean
 //            typeChip.text = word.type
 //        }
+        val word = list[position]
+        holder.itemView.setOnClickListener{
+            itemClickListener?.onClick(word)
+        }
     }
     class WordViewHolder(val binding : ItemWordBinding) : RecyclerView.ViewHolder(binding.root){ //itemview가 아닌 binding.root를 통째로 넘겨줌
         fun bind(word: Word){
@@ -36,6 +43,12 @@ class WordAdapter(private val list: MutableList<Word>) : RecyclerView.Adapter<Wo
                 meanTextView.text = word.mean
                 typeChip.text = word.type
             }
+        }
+    }
+
+    interface ItemClickListener{
+        fun onClick(word: Word){
+
         }
     }
 }
