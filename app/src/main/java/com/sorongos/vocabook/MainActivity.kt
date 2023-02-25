@@ -1,5 +1,6 @@
 package com.sorongos.vocabook
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -15,12 +16,23 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        initRecyclerView()
+
+        //단어를 추가
+        binding.addButton.setOnClickListener{
+            Intent(this,AddActivity::class.java).let{
+                startActivity(it)
+            }
+        }
+    }
+
+    /**리사이클러뷰 초기화*/
+    private fun initRecyclerView(){
         val dummyList = mutableListOf<Word>( // word 데이터 클래스
             Word("날씨","weather","명사"),
             Word("날씨","weather","명사"),
             Word("날씨","weather","명사")
         )
-
         wordAdapter = WordAdapter(dummyList,this)
         binding.wordRecyclerView.apply {
             adapter = wordAdapter
