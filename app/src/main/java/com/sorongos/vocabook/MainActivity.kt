@@ -2,6 +2,7 @@ package com.sorongos.vocabook
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.sorongos.vocabook.databinding.ActivityMainBinding
 
@@ -23,6 +24,9 @@ class MainActivity : AppCompatActivity() {
         binding.wordRecyclerView.apply {
             adapter = wordAdapter
             layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
+            //디바이더 넣기
+            val dividerItemDecoration = DividerItemDecoration(applicationContext, LinearLayoutManager.VERTICAL)
+            addItemDecoration(dividerItemDecoration)
         }
     }
 }
