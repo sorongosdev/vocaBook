@@ -21,14 +21,21 @@ class WordAdapter(private val list: MutableList<Word>) : RecyclerView.Adapter<Wo
     }
     /**데이터 연결*/
     override fun onBindViewHolder(holder: WordViewHolder, position: Int) {
-        holder.binding.apply {
-            val word = list[position]
-            textTextView.text = word.text
-            meanTextView.text = word.mean
-            typeChip.text = word.type
-        }
+        holder.bind(list[position]) //좀더 깔끔한 코드 구현
+//        holder.binding.apply {
+//            val word = list[position]
+//            textTextView.text = word.text
+//            meanTextView.text = word.mean
+//            typeChip.text = word.type
+//        }
     }
     class WordViewHolder(val binding : ItemWordBinding) : RecyclerView.ViewHolder(binding.root){ //itemview가 아닌 binding.root를 통째로 넘겨줌
-
+        fun bind(word: Word){
+            binding.apply{
+                textTextView.text = word.text
+                meanTextView.text = word.mean
+                typeChip.text = word.type
+            }
+        }
     }
 }
