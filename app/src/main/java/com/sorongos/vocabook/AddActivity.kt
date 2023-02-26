@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
 import androidx.core.view.children
+import androidx.core.widget.addTextChangedListener
 import com.google.android.material.chip.Chip
 import com.sorongos.vocabook.databinding.ActivityAddBinding
 
@@ -34,6 +35,18 @@ class AddActivity : AppCompatActivity() {
                 addView(createChip(text))
             }
         }
+
+        /**두 글자 미만일 땐 에러처리*/
+        binding.textInputEditText.addTextChangedListener {
+            it?.let {text->
+                binding.textTextInputLayout.error = when(text.length){
+                    0-> "값을 입력해주세요"
+                    1-> "2글자 이상을 입력해주세요"
+                    else -> null
+                }
+            }
+        }
+
         originWord = intent.getParcelableExtra<Word>("originWord")
         originWord?.let { word ->
             // null이 아니라면 ui처리

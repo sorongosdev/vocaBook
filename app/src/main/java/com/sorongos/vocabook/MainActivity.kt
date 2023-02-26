@@ -51,7 +51,6 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         //단어 추가 화면으로 넘어가는 플러스버튼
         binding.addButton.setOnClickListener {
             Intent(this, AddActivity::class.java).let {
-                startActivity(it)
                 updateAddWordResult.launch(it) // launch를 통해 실행
             }
         }
