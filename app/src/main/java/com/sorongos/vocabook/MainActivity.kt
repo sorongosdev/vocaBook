@@ -12,6 +12,7 @@ import com.sorongos.vocabook.databinding.ActivityMainBinding
 class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
     private lateinit var binding: ActivityMainBinding
     private lateinit var wordAdapter: WordAdapter
+    private var selectedWord: Word? = null // 선택된 word를 Word 인스턴스로 저장
 
     /**addActivity의 result를 들어볼 수 있다
      * addActivity를 들여다보기 위해 사용*/
@@ -41,6 +42,10 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
                 startActivity(it)
                 updateAddWordResult.launch(it) // launch를 통해 실행
             }
+        }
+
+        binding.deleteView.setOnClickListener {
+            delete()
         }
     }
 
@@ -81,7 +86,31 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         }.start()
     }
 
+    /**최상단 단어 삭제*/
+    private fun delete() {
+        //선택된 게 없다면
+        if (selectedWord == null) return
+
+        Thread {
+            selectedWord?.let { word ->
+                AppDatabase.getInstance(this)?.wordDao()?.delete(word)
+                runOnUiThread {
+                    wordAdapter.list.remove(word) // 어댑터에서 삭제
+                    wordAdapter?.notifyDataSetChanged()
+                    binding.textTextView.text = "" // 위에서 삭제
+                    binding.meanTextView.text = ""
+                    Toast.makeText(this,"삭제 완료", Toast.LENGTH_SHORT).show()
+                }
+
+            }
+        }.start()
+    }
+
+    /**텍스트가 선택되면 최상단에 단어를 띄움*/
     override fun onClick(word: Word) {
+        selectedWord = word
+        binding.textTextView.text = word.text
+        binding.meanTextView.text = word.mean
         Toast.makeText(this, "${word.text}가 클릭 됐습니다", Toast.LENGTH_SHORT).show()
     }
 
