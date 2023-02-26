@@ -9,7 +9,7 @@ import com.sorongos.vocabook.databinding.ItemWordBinding
 
 /**사용할 데이터는 데이터 클래스를 담고 있는 컬렉션 타입*/
 class WordAdapter(
-    private val list: MutableList<Word>,
+    val list: MutableList<Word>,
     private val itemClickListener: ItemClickListener? = null,
 ) : RecyclerView.Adapter<WordAdapter.WordViewHolder>() {
 

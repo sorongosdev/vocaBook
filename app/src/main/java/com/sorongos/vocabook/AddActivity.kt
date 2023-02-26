@@ -1,5 +1,6 @@
 package com.sorongos.vocabook
 
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.widget.Toast
@@ -49,12 +50,14 @@ class AddActivity : AppCompatActivity() {
         val type = findViewById<Chip>(binding.typeChipGroup.checkedChipId).text.toString() //check된 칩을 받아옴
         val word = Word(text, mean, type)
 
-        Thread{ //데이터베이스는 워커 쓰레드에서
+        /**db 관련 처리, 데이터를 추가함*/
+        Thread{
             AppDatabase.getInstance(this)?.wordDao()?.insert(word) // 있을 때만 작업
             runOnUiThread {
                 Toast.makeText(this,"저장을 완료했습니다",Toast.LENGTH_SHORT).show()
-
             }
+            val intent = Intent().putExtra("isUpdated",true)
+            setResult(RESULT_OK,intent) // 추가를 했을 때 result를 변경
             finish()
         }.start()
     }
