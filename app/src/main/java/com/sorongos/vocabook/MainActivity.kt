@@ -29,6 +29,18 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         }
     }
 
+    /**데이터를 받고나면 업데이트가 될거다*/
+    private val updateEditWordResult = registerForActivityResult(
+        ActivityResultContracts.StartActivityForResult()
+    ) { result ->
+        // word 자체를 받는다
+        val editWord = result.data?.getParcelableExtra<Word>("editWord")
+
+        if (result.resultCode == RESULT_OK && editWord != null) { //add를 했을때만 결과값을 받아옴
+            updateEditWord(editWord)
+        }
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
@@ -46,6 +58,9 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
 
         binding.deleteView.setOnClickListener {
             delete()
+        }
+        binding.editImageView.setOnClickListener {
+            edit()
         }
     }
 
@@ -86,6 +101,20 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
         }.start()
     }
 
+    private fun updateEditWord(word: Word) { // 어떤게 변경되어 있는지 모르니까 word를 받아야한다
+        //값을 찾아야한다
+        //데이터의 내용만 변경, 아이디는 변경x
+        val index = wordAdapter.list.indexOfFirst { it.id == word.id }
+        wordAdapter.list[index] = word
+        runOnUiThread {
+            selectedWord = word
+            wordAdapter.notifyItemChanged(index)
+            binding.textTextView.text = word.text
+            binding.meanTextView.text = word.mean
+        }
+
+    }
+
     /**최상단 단어 삭제*/
     private fun delete() {
         //선택된 게 없다면
@@ -99,11 +128,18 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
                     wordAdapter?.notifyDataSetChanged()
                     binding.textTextView.text = "" // 위에서 삭제
                     binding.meanTextView.text = ""
-                    Toast.makeText(this,"삭제 완료", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(this, "삭제 완료", Toast.LENGTH_SHORT).show()
                 }
 
             }
         }.start()
+    }
+
+    private fun edit() {
+        if (selectedWord == null) return
+
+        val intent = Intent(this, AddActivity::class.java).putExtra("originWord", selectedWord)
+        updateEditWordResult.launch(intent) // 해줘야함
     }
 
     /**텍스트가 선택되면 최상단에 단어를 띄움*/
