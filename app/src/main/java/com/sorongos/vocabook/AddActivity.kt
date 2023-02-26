@@ -2,6 +2,7 @@ package com.sorongos.vocabook
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.widget.Toast
 import com.google.android.material.chip.Chip
 import com.sorongos.vocabook.databinding.ActivityAddBinding
 
@@ -13,8 +14,9 @@ class AddActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         initViews()
+        /**단어추가*/
         binding.addButton.setOnClickListener {
-
+            add()
         }
     }
 
@@ -38,5 +40,22 @@ class AddActivity : AppCompatActivity() {
             isCheckable = true
             isClickable = true
         }
+    }
+
+    /**addButton을 눌렀을 때, Word 인스턴스로 변환*/
+    private fun add(){
+        val text = binding.textInputEditText.text.toString()
+        val mean = binding.meanTextInputEditText.text.toString()
+        val type = findViewById<Chip>(binding.typeChipGroup.checkedChipId).text.toString() //check된 칩을 받아옴
+        val word = Word(text, mean, type)
+
+        Thread{ //데이터베이스는 워커 쓰레드에서
+            AppDatabase.getInstance(this)?.wordDao()?.insert(word) // 있을 때만 작업
+            runOnUiThread {
+                Toast.makeText(this,"저장을 완료했습니다",Toast.LENGTH_SHORT).show()
+
+            }
+            finish()
+        }.start()
     }
 }

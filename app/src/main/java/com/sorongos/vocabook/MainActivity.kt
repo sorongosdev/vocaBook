@@ -28,12 +28,8 @@ class MainActivity : AppCompatActivity(), WordAdapter.ItemClickListener {
 
     /**리사이클러뷰 초기화*/
     private fun initRecyclerView(){
-        val dummyList = mutableListOf<Word>( // word 데이터 클래스
-            Word("날씨","weather","명사"),
-            Word("날씨","weather","명사"),
-            Word("날씨","weather","명사")
-        )
-        wordAdapter = WordAdapter(dummyList,this)
+
+        wordAdapter = WordAdapter(mutableListOf(),this)
         binding.wordRecyclerView.apply {
             adapter = wordAdapter
             layoutManager = LinearLayoutManager(applicationContext, LinearLayoutManager.VERTICAL, false)
